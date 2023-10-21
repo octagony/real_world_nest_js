@@ -1,10 +1,11 @@
 import { PrismaService } from '@app/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { User } from '@prisma/client';
 import { sign } from 'jsonwebtoken';
 import { IUserResponse } from './types/userResponse.interface';
+import { LoginUserDto } from './dto/loginUser.dto';
 
 @Injectable()
 export class UserService {
@@ -35,6 +36,34 @@ export class UserService {
         password: await hash(createUserDto.password, 10),
       },
     });
+
+    return user;
+  }
+  async loginUser(loginUserDto: LoginUserDto): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: loginUserDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException(
+        'Credentials not valid',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const validatePassword = await compare(
+      loginUserDto.password,
+      user.password,
+    );
+
+    if (!validatePassword) {
+      throw new HttpException(
+        'Credentials not valid',
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
 
     return user;
   }
