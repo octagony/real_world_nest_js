@@ -6,6 +6,7 @@ import { User } from '@prisma/client';
 import { sign } from 'jsonwebtoken';
 import { IUserResponse } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/loginUser.dto';
+import { UpdateUserDto } from './dto/updateUser.dto';
 
 @Injectable()
 export class UserService {
@@ -74,6 +75,24 @@ export class UserService {
         id,
       },
     });
+  }
+
+  async updateUser(
+    userId: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    if (updateUserDto.password) {
+      updateUserDto.password = await hash(updateUserDto.password, 10);
+    }
+    const updateUser = await this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...updateUserDto,
+      },
+    });
+    return updateUser;
   }
 
   formatUserResponse(user: User): IUserResponse {
