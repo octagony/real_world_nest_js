@@ -10,21 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Tag{
-    id Int @id @default(autoincrement()) 
-    name String @unique
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
-    @@map("tags")
+  @@map("tags")
 }
 
-model User{
-     id Int @id @default(autoincrement())
-     username String @unique
-     password String
-     email String @unique
-     bio String @default("")
-     image String @default("")
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  email    String @unique
+  bio      String @default("")
+  image    String @default("")
 
+  @@map("users")
+}
 
-     @@map("users")
+model Article {
+  id             Int      @id @default(autoincrement())
+  slug           String   @unique
+  title          String
+  description    String   @default("")
+  body           String   @default("")
+  tagList        String[]
+  favoritesCount Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
+  @@map("articles")
 }

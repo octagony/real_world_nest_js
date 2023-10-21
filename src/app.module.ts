@@ -10,9 +10,10 @@ import { TagsModule } from '@app/tags/tags.module';
 import { PrismaModule } from '@app/prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { AuthMiddleware } from './user/middlewares/auth.middleware';
+import { ArticleModule } from './article/article.module';
 
 @Module({
-  imports: [PrismaModule, TagsModule, UserModule],
+  imports: [PrismaModule, TagsModule, UserModule, ArticleModule],
   controllers: [AppController],
   providers: [AppService],
 })

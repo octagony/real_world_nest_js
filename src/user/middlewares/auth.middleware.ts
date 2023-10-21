@@ -2,8 +2,8 @@ import { IExpressRequest } from '@app/types/expressRequest.interface';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
-import { UserService } from '../user.service';
-import { IJWTVerify } from '../types/jwtVerify.interface';
+import { UserService } from '@app/user/user.service';
+import { IJWTVerify } from '@app/user/types/jwtVerify.interface';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
