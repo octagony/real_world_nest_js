@@ -12,6 +12,8 @@ import { CreateUserDto } from '@app/user/dto/createUser.dto';
 import { IUserResponse } from '@app/user/types/userResponse.interface';
 import { LoginUserDto } from '@app/user/dto/loginUser.dto';
 import { IExpressRequest } from '@app/types/expressRequest.interface';
+import { UserInfo } from '@app/user/decorators/user.decorator';
+import { User } from '@prisma/client';
 
 @Controller()
 export class UserController {
@@ -36,7 +38,8 @@ export class UserController {
   }
 
   @Get('user')
-  async getCurrentUser(@Req() request: IExpressRequest): Promise<any> {
-    return this.userService.formatUserResponse(request.user);
+  async getCurrentUser(@UserInfo() user: User): Promise<IUserResponse> {
+    console.log('user', user);
+    return this.userService.formatUserResponse(user);
   }
 }
