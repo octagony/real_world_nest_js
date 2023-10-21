@@ -3,6 +3,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { hash } from 'bcrypt';
 import { User } from '@prisma/client';
+import { sign } from 'jsonwebtoken';
+import { IUserResponse } from './types/userResponse.interface';
 
 @Injectable()
 export class UserService {
@@ -35,5 +37,28 @@ export class UserService {
     });
 
     return user;
+  }
+
+  formatUserResponse(user: User): IUserResponse {
+    return {
+      user: {
+        email: user.email,
+        username: user.username,
+        bio: user.bio,
+        image: user.image,
+        token: this.generateJWT(user),
+      },
+    };
+  }
+
+  generateJWT(user: User): string {
+    return sign(
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+    );
   }
 }
