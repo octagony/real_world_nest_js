@@ -9,3 +9,10 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Tag{
+    id Int @id @default(autoincrement()) 
+    name String @unique
+
+    @@map("tags")
+}
