@@ -48,7 +48,7 @@ export class UserService {
 
     if (!user) {
       throw new HttpException(
-        'Credentials not valid',
+        'Credentials are not valid',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
@@ -60,12 +60,20 @@ export class UserService {
 
     if (!validatePassword) {
       throw new HttpException(
-        'Credentials not valid',
+        'Credentials are not valid',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
 
     return user;
+  }
+
+  async findUserById(id: number): Promise<User> {
+    return await this.prismaService.user.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   formatUserResponse(user: User): IUserResponse {
